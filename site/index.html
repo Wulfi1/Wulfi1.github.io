@@ -1,0 +1,746 @@
+﻿<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Seeing Things</title>
+    <link rel="stylesheet" href="styles.css?v=10">
+  </head>
+  <body>
+    <header class="hero">
+      <nav class="topbar" aria-label="Project links">
+        <a href="#story">Story</a>
+        <a href="#usa">USA</a>
+        <a href="#duration">Duration</a>
+        <a href="#hotspots">Hotspots</a>
+        <a href="notebooks/explainer.ipynb">Notebook</a>
+      </nav>
+      <div class="hero__content">
+        <p class="eyebrow">UFO reports as social data</p>
+        <h1>Seeing Things</h1>
+        <p class="subtitle">What 80,000 UFO reports, filed over more than a century, reveal about people, places, and the infrastructure of the strange.</p>
+      </div>
+      <svg id="hero-map" class="hero__map" role="img" aria-label="World map of UFO report density"></svg>
+    </header>
+
+    <main id="story">
+      <section class="chapter intro-grid">
+        <div>
+          <p class="kicker">A map of mystery</p>
+          <h2>At first glance, this looks like a map of UFO activity.</h2>
+          <p>
+            But zoom in and each dot becomes a person: someone stepping outside, looking up,
+            and deciding that what they saw was strange enough to write down and submit.
+            The 80,332 entries in this archive span from 1906 to 2014 and scatter across six
+            continents, yet they are not distributed evenly across the globe. They cluster
+            where people live, where broadband arrived early, where English is common, and
+            where people know there is somewhere to report what they saw.
+          </p>
+          <p>
+            That makes the central question less "where are UFOs?" and more "where, when,
+            and how do people turn uncertainty into a report?" A sighting only becomes data
+            after several human steps: noticing something, interpreting it as unusual,
+            remembering enough detail, and choosing to submit it. The heavy concentration in
+            the United States does not necessarily mean Americans see more strange things in
+            the sky. It may mean they had more tools, more cultural references, and a louder
+            reporting system.
+          </p>
+          <p>
+            So this project treats the archive as evidence of reporting behavior rather than
+            direct evidence of UFO activity. The goal is to understand why some places,
+            periods, and shapes become visible in the data, while others remain quiet.
+          </p>
+        </div>
+        <div class="metric-grid" id="summary-metrics"></div>
+      </section>
+
+      <section class="chapter split split--side" id="shapes">
+        <div class="split-head">
+          <p class="kicker">Data reality check</p>
+          <h2>This is report data, not alien data.</h2>
+        </div>
+        <div class="copy">
+          <p>
+            The dataset's official description covers 1949-2014, but the raw archive reaches back to 1906,
+            which immediately signals that this is a living, imperfect ledger rather than a controlled
+            experiment. Reports entered the system unevenly across decades, were sometimes submitted
+            retroactively, and were geocoded with varying precision. A few records even contain impossible
+            durations or missing coordinates. These flaws do not make the dataset useless, but they do
+            change what we can responsibly ask of it.
+          </p>
+          <p>
+            Instead of treating the errors and biases as noise to hide, we use them as part of the story.
+            They show how the archive was produced, who it was built to hear from, and why some places,
+            periods, and kinds of sightings become much louder than others. The data is not a clean record
+            of events in the sky. It is a record of reports that survived a particular reporting pipeline.
+          </p>
+          <div class="warning">
+            These are not verified events. They are public reports submitted by people and standardized
+            by a reporting pipeline.
+          </div>
+        </div>
+        <div class="panel">
+          <h3>Top reported shape labels</h3>
+          <svg id="shape-bars" class="chart" role="img" aria-label="Bar chart of top reported UFO shapes"></svg>
+          <p class="figure-note">
+            Figure 1a. Shape labels mostly describe uncertainty at a distance. The dominance of "light" suggests
+            many reports are brief luminous observations, not detailed close-up encounters.
+          </p>
+          <h3 class="panel-subtitle">Grouped by visual impression</h3>
+          <div id="shape-group-stack" class="shape-stack" role="img" aria-label="Stacked bar chart of grouped UFO shape categories">
+            <div class="shape-stack__bar">
+              <div class="shape-stack__segment" style="width: 30.0%; background: #d65d47;" title="lights / flashes: 24,101 reports (30.0%)"></div>
+              <div class="shape-stack__segment" style="width: 28.3%; background: #117c78;" title="round forms: 22,700 reports (28.3%)"></div>
+              <div class="shape-stack__segment" style="width: 22.8%; background: #8d6b2f;" title="uncertain labels: 18,350 reports (22.8%)"></div>
+              <div class="shape-stack__segment" style="width: 18.9%; background: #3f6f9f;" title="structured forms: 15,181 reports (18.9%)"></div>
+            </div>
+            <div class="shape-stack__legend">
+              <div class="shape-stack__item">
+                <span class="shape-stack__swatch" style="background: #d65d47;"></span>
+                <span class="shape-stack__label">lights / flashes</span>
+                <strong>30.0%</strong>
+                <small>24,101</small>
+              </div>
+              <div class="shape-stack__item">
+                <span class="shape-stack__swatch" style="background: #117c78;"></span>
+                <span class="shape-stack__label">round forms</span>
+                <strong>28.3%</strong>
+                <small>22,700</small>
+              </div>
+              <div class="shape-stack__item">
+                <span class="shape-stack__swatch" style="background: #8d6b2f;"></span>
+                <span class="shape-stack__label">uncertain labels</span>
+                <strong>22.8%</strong>
+                <small>18,350</small>
+              </div>
+              <div class="shape-stack__item">
+                <span class="shape-stack__swatch" style="background: #3f6f9f;"></span>
+                <span class="shape-stack__label">structured forms</span>
+                <strong>18.9%</strong>
+                <small>15,181</small>
+              </div>
+            </div>
+          </div>
+          <p class="figure-note">
+            Figure 1b. A broad grouping of shape labels. This does not prove the labels mean the
+            same thing; it shows how much of the archive is made from lights, round impressions,
+            uncertainty, and structure.
+          </p>
+        </div>
+        <div class="full-row">
+          <p>
+            The source pipeline runs through NUFORC, the National UFO Reporting Center, an
+            English-language, US-centered organization with deep roots in American media culture.
+            That lineage leaves fingerprints everywhere. The chart above shows what people
+            <em>said</em> they saw; it is a taxonomy of human perception under uncertainty, not a
+            census of aircraft types. "Light" leads by a wide margin, with nearly 16,600 reports,
+            followed by triangles, circles, and the candid label "unknown."
+          </p>
+          <p>
+            One complication is that the shape categories are not equally precise. "Disk," "circle,"
+            "sphere," "oval," and "egg" may describe genuinely different impressions, but they may
+            also be different words for the same basic problem: a small bright object seen far away,
+            without enough detail to judge its true form. Figure 1b makes that interpretation visible:
+            grouped together, these simple round labels account for more than 22,000 reports. Add
+            "light," "fireball," and "flash," and a large share of the archive is not made up of
+            detailed craft-like descriptions, but of brightness, motion, and rough geometry.
+          </p>
+          <p>
+            That does not mean the reports are false. It means many of them sit in the space between
+            perception and interpretation. A moving light might be remembered as a sphere, a disk, a
+            fireball, or simply "unknown" depending on distance, duration, expectation, and vocabulary.
+            Some comments mention ordinary candidates such as stars, aircraft, satellites, meteors,
+            Venus, or balloons. Those words do not explain every report, but they remind us that the
+            dataset is full of moments where people were trying to classify something before they fully
+            understood it. This also sets up the duration analysis later in the story: if a sighting
+            lasts only a few seconds, the reporter has much less time to decide whether it was a disk,
+            sphere, fireball, or simply a light.
+          </p>
+        </div>
+      </section>
+
+      <section class="chapter split split--side">
+        <div class="split-head">
+          <p class="kicker">Time changed everything</p>
+          <h2>The sky gets louder in the internet era.</h2>
+        </div>
+        <div class="copy">
+          <p>
+            For most of the twentieth century the archive stays thin: dozens of reports per year, a
+            few hundred at most. Then 1995 arrives and the count jumps from 421 to 1,078 in a single
+            step. By 2012 the annual total reaches 7,356. Fewer than 10% of all reports were filed
+            before 1995; the remaining 90% arrived in the following two decades.
+          </p>
+          <p>
+            The important point is not that the sky suddenly changed in the mid-1990s. The reporting
+            threshold changed. A report that might once have stayed as a private story, a local rumor,
+            or a note in someone's memory could now become a row in a public dataset. In theory, the
+            internet might have made people more skeptical by exposing them to more explanations,
+            debunking, and comparison material. In this archive, however, the visible effect is that
+            reporting became much easier and much more common.
+          </p>
+        </div>
+        <div class="panel">
+          <h3>Reports by year</h3>
+          <div class="toggle-row" role="group" aria-label="Annual chart scale">
+            <button class="mode-button active" data-annual-scale="linear">Linear</button>
+            <button class="mode-button" data-annual-scale="log">Log</button>
+          </div>
+          <svg id="annual-line" class="chart" role="img" aria-label="Line chart of UFO reports by year"></svg>
+          <p class="figure-note">
+            Figure 2. The mid-1990s jump is the central clue: the archive gets louder when reporting becomes easier.
+            Use the log toggle to make early decades visible without flattening them into the baseline.
+          </p>
+        </div>
+        <div class="full-row">
+          <p>
+            Online submission forms made it easy to type up an observation and hit send from your
+            kitchen table. NUFORC's growing visibility brought in reports that would previously have
+            gone nowhere. The chart therefore traces the adoption curve of a reporting system as much
+            as any change in aerial phenomena. A louder archive is not automatically a stranger sky;
+            it may simply be a sky with a louder microphone pointed at it.
+          </p>
+          <p>
+            The change is not only in volume; it also shows up in the vocabulary from Figure 1. Before
+            1995, "disk" is the leading shape, accounting for about 19% of reports. After 1995, "light"
+            becomes the leading label, accounting for about 22%. That shift fits the reporting-threshold
+            argument: as submission became easier, the archive absorbed more brief, ambiguous sightings
+            that might previously never have been written down. The later duration comparison returns
+            to the same idea from another angle.
+          </p>
+          <p>
+            One detail worth noting, the 2014 total of 2,260 reports, far below the 7,038 logged in
+            2013, is almost certainly a collection artifact rather than a genuine drop. The archive
+            appears to close before all 2014 submissions were processed. More interesting is what the
+            chart cannot show. By 2014, smartphones, social media, and dedicated apps were opening
+            entirely new reporting pathways that sit outside this dataset entirely.
+          </p>
+        </div>
+      </section>
+
+      <section class="chapter figure-section">
+        <div class="copy">
+          <p class="kicker">Annotated timeline</p>
+          <h2>Reports by year with cultural marker</h2>
+          <p>
+            The vertical line marks the September 1993 premiere of <em>The X-Files</em>, a show
+            that made alien conspiracy a mainstream conversation and ran for nine seasons at the
+            peak of the archive's growth. It would be too simple to say the show caused the spike,
+            the web was arriving at the same moment, NUFORC was expanding, and culture was already
+            primed. But the alignment is hard to ignore. Social permission to report strange things
+            and technical infrastructure to report them arrived together.
+          </p>
+          <p>
+            Other cultural markers help sharpen that point. <em>E.T.</em> was a massive cultural
+            event in 1982, but the annual report count does not visibly jump around that year. The
+            late 1990s look different: <em>The X-Files</em>, <em>Independence Day</em>,
+            <em>Men in Black</em>, and the Phoenix Lights all sit inside the same rising
+            media-and-reporting environment. That pattern argues against a simple "one movie caused
+            the spike" story. Culture made UFOs easier to imagine and talk about; the internet made
+            those conversations easier to submit.
+          </p>
+          <p>
+            This also connects back to the shape labels in Figure 1. Popular culture does not only
+            affect whether people report; it may also affect the words and images available when they
+            describe what they saw. A vague light in the sky can become a disk, saucer, triangle, or
+            craft partly through the visual vocabulary people already know.
+          </p>
+          <p>
+            Filming locations are a tempting next question, but they are probably a weaker signal
+            than event locations. A film is watched nationally, while a local sighting can directly
+            change what people nearby notice and report. The Phoenix Lights are the better example:
+            Arizona reports rise from 18 in 1996 to 109 in 1997. That does not prove causation, but
+            it shows how a regional event, media attention, and an available reporting system can
+            briefly turn one place into a louder part of the archive.
+          </p>
+        </div>
+        <div class="panel">
+          <h3>Annual reports (annotated)</h3>
+          <img src="figures/annual_by_year.png" alt="Annual UFO reports annotated with X-Files" style="max-width:100%;height:auto;border:1px solid #ccc;">
+          <p class="figure-note">
+            Figure 3. The marker is not causal proof. It marks the cultural side of a broader 1990s
+            shift, while the 1995 internet-era split marks the reporting-infrastructure side.
+          </p>
+        </div>
+      </section>
+
+      <section class="chapter split">
+        <div class="copy">
+          <p class="kicker">Human rhythms</p>
+          <h2>Sightings cluster when people are likely to be looking.</h2>
+          <p>
+            The month-and-hour heatmap reads like a schedule of human outdoor life. Reports peak in
+            July and in the hours just after sunset, not because something is more active then, but
+            because that is when people are outside, awake, and looking up. The predawn hours and the
+            dead of winter are quiet. Not stranger, just less observed.
+          </p>
+          <p>
+            The internet lowered the reporting threshold, but the heatmap shows that the first
+            threshold is still observational: someone has to be awake, outside, and looking. People
+            need darkness to notice lights, free time to look upward, and enough social context to
+            decide the sighting is worth mentioning. The heatmap is therefore a behavioral map as much
+            as a temporal one.
+          </p>
+        </div>
+        <div class="panel">
+          <h3>Reports by month and hour</h3>
+          <svg id="heatmap" class="chart heatmap" role="img" aria-label="Heatmap of UFO reports by month and hour"></svg>
+          <p class="figure-note">
+            Figure 4. The strongest pattern is human availability: warm months and evening hours create more chances
+            for people to notice and report ambiguous lights.
+          </p>
+        </div>
+        <div class="full-row">
+          <p>
+            The heatmap carries two patterns layered on top of each other. The seasonal signal:
+            summer months peaking in July, reflects outdoor exposure time, warmer months bring longer
+            evenings, more time spent outside, and more opportunities to look up. A July backyard
+            gathering is exactly when an unusual light overhead gets noticed, pointed at, and discussed
+            until someone decides to report it. January offers the same sky but far fewer witnesses
+            spending time under it.
+          </p>
+          <p>
+            The daily pattern tells a different story. The 9–11 PM window is when the sky is fully
+            dark, the day's activity is winding down, and attention is available. An unusual light at
+            3 AM goes largely unseen simply because almost nobody is outside to see it. Together the
+            two patterns describe a very specific human moment, the warm, dark, late evening, as
+            the prime conditions for perceiving something inexplicable.
+          </p>
+          <p>
+            The peak is not just seasonal and not just daily; it is the overlap of both. More than half
+            of all reports occur between 19:00 and 23:00, and nearly one in five reports occur on summer
+            evenings alone. This helps explain why "light" dominates Figure 1: the archive is richest
+            at the times when lights are easiest to notice and hardest to classify. The duration section
+            returns to the same problem from another angle: the less time people have to observe an
+            object, the more likely the report is to remain a light, flash, or unknown shape.
+          </p>
+        </div>
+      </section>
+
+      <section class="chapter split split--side" id="usa">
+        <div class="split-head">
+          <p class="kicker">USA reporting machine</p>
+          <h2>The United States dominates, but not because it owns the sky.</h2>
+        </div>
+        <div class="copy">
+          <p>
+            About 81% of geo-coded reports, 65,114 entries, are tagged to the United States. The next
+            largest contributors are Canada (3,000), the UK (1,905), Australia (538), and Germany (105).
+            Nearly 9,700 records carry no country at all. This is not a global survey, it is primarily
+            a portrait of American reporting culture, with a thin international fringe.
+          </p>
+          <p>
+            The most important reason is built into the data pipeline. <a href="https://nuforc.org/about-us/">NUFORC</a>
+            is a US-based, English-language reporting institution whose website has operated continuously
+            since 1995; before that, reports arrived mainly by phone hotline and US mail. The archive
+            therefore does not begin from a neutral global listening post. It begins from an American
+            reporting machine that English-speaking witnesses were far more likely to find, trust, and use.
+          </p>
+          <p>
+            The country ranking supports that reading. After the United States, the largest named
+            contributors are Canada, the UK, and Australia: not the world's most populous countries,
+            but countries close to the archive linguistically and culturally. The goal of the state
+            comparison is to slow down the obvious conclusion. Yes, the United States dominates. But
+            inside the United States, raw counts and population-adjusted counts tell different stories.
+            That difference helps show why denominators matter when we talk about "where things happen."
+          </p>
+        </div>
+        <div class="panel panel--stack">
+          <h3>US states: raw reports vs reports per million people</h3>
+          <div class="toggle-row" role="group" aria-label="State chart mode">
+            <button class="mode-button active" data-state-mode="reports">Raw</button>
+            <button class="mode-button" data-state-mode="reports_per_million">Per million</button>
+          </div>
+          <svg id="state-bars" class="chart" role="img" aria-label="US state report ranking"></svg>
+          <h3 class="panel-subtitle">State choropleth</h3>
+          <svg id="state-map" class="chart chart--short" role="img" aria-label="US state choropleth map of UFO reports"></svg>
+          <p class="figure-note">
+            Figure 5. Raw counts mostly reward large populations. Switching to per-million reshuffles the story by
+            comparing states on a common denominator. The choropleth mirrors the same toggle geographically.
+          </p>
+        </div>
+        <div class="full-row">
+          <p>
+            In raw counts, large states dominate: California leads with 8,912, followed by Washington
+            state (3,966) and Florida (3,835). But normalize by population and the ranking reshuffles
+            dramatically. Washington state rises to roughly 590 reports per million, more than double
+            California's 239. Oregon, Montana, Alaska, Maine, and Vermont all climb sharply. Small,
+            sparsely populated states may be exactly the places where a light in the sky stands out
+            against an otherwise dark and quiet horizon, and where the same handful of active local
+            reporters can push a state's rate well above the national average.
+          </p>
+          <p>
+            This is also where stereotypes become tempting, and where the data asks for restraint.
+            A high per-million rate is not a personality test for a state. It does not show that
+            Washington, Montana, or Oregon are more gullible, more educated, more rural, more liberal,
+            or more conservative. It only shows that reporting is dense relative to population. The
+            explanation could involve darker skies, outdoor lifestyles, local media events, broadband
+            access, repeated sightings, or a small number of unusually active reporters.
+          </p>
+          <p>
+            Different states seem to dominate for different reasons. California, Texas, Florida, and
+            New York mostly reflect population and large urban reporting hubs. Washington and Arizona
+            are more interesting because they remain high after population normalization, suggesting
+            unusually dense reporting cultures around places like Seattle and Phoenix. Smaller states
+            such as Montana, Alaska, Maine, and Vermont rise in the per-million view because even a few
+            hundred reports become large relative to their populations. The state chart therefore mixes
+            several mechanisms at once: population size, city networks, outdoor visibility, local UFO
+            history, and reporting culture.
+          </p>
+          <p>
+            Internet access helps explain why this reporting machine became so loud during the period
+            covered by the dataset. <a href="https://www.pewresearch.org/internet/fact-sheet/internet-broadband/">Pew estimates</a>
+            that 52% of US adults used the internet in 2000, rising to 84% by 2014. That does not
+            prove Americans saw more unusual things. It does mean that, during the archive's fastest
+            growth, more Americans had both the cultural vocabulary and the technical path needed to
+            turn a strange sky moment into a submitted report.
+          </p>
+          <p>
+            At the other end sits Washington D.C., which is not shown in the plot because its count
+            is so small. The District records just 7 reports in the entire archive, a rate of about
+            11.6 per million, the lowest of any entry by a wide margin. In a city saturated with
+            known military aircraft, government helicopters, and tightly controlled airspace,
+            residents may simply be conditioned to assume that unusual things in the sky have mundane
+            official explanations. D.C. is perhaps the only American city where seeing something
+            strange overhead is a reasonable day at the office.
+          </p>
+        </div>
+      </section>
+
+      <section class="chapter split">
+        <div class="copy">
+          <p class="kicker">City hotspots</p>
+          <h2>The local hotspots are mostly ordinary reporting hubs.</h2>
+          <p>
+            At the city level, the mystery gives way to the mundane geography of where Americans live
+            and connect. Seattle tops the list with 524 reports, followed by Phoenix (450), Las Vegas
+            (363), Los Angeles (352), San Diego (336), and Portland (332). These are not hidden desert
+            outposts. They are large, well-connected cities and regional hubs where many people are
+            available to notice something, discuss it, and submit a report.
+          </p>
+          <p>
+            This also links back to the shape and timing sections. The leading shape in the largest
+            city hotspots is usually "light," which fits the broader story: reports are densest where
+            many people are present, connected, and able to notice ambiguous lights in the evening sky.
+            Population and reporting access determine what actually becomes data.
+          </p>
+        </div>
+        <div class="panel panel--stack">
+          <h3>Top US city hotspots</h3>
+          <svg id="city-bars" class="chart" role="img" aria-label="Top US city UFO report counts"></svg>
+          <p class="figure-note">
+            Figure 6. The highest city counts are ordinary urban reporting hubs: Seattle, Phoenix,
+            Las Vegas, Los Angeles, San Diego, Portland, Houston, and Chicago.
+          </p>
+        </div>
+        <div class="full-row">
+          <p>
+            One suburban entry in the city rankings deserves a closer look. Tinley Park, Illinois
+            places 27th nationally with 132 reports, a striking count for a suburb of around 56,000
+            people. Between 2004 and 2006 Tinley Park became locally famous for a series of mass
+            nighttime sightings, large, slow-moving formations of red lights witnessed by hundreds
+            of residents simultaneously. Those events seeded a lasting local reporting culture that
+            continues to show up in the data long after the original incidents faded from the news.
+            One mass event, it turns out, can permanently raise a community's baseline.
+          </p>
+        </div>
+      </section>
+
+      <section class="chapter split">
+        <div class="copy">
+          <p class="kicker">Area 51 reality check</p>
+          <h2>The most famous UFO place is small in the archive.</h2>
+          <p>
+            Area 51 is the obvious cultural expectation. If UFO reports simply followed the popular
+            belief that the US government hides alien technology in the Nevada desert, we might expect
+            the map to flare up around Groom Lake. The data does not do that. The bounding region
+            around the classified Nevada test site, stretching roughly between Rachel and Alamo,
+            accounts for just 20 reports in the entire archive, 11 of them from Rachel.
+          </p>
+          <p>
+            Las Vegas, about 150 km to the south, has 363 reports. All of Nevada has 803. The point is
+            not that the data disproves Area 51 mythology; the area is sparse, restricted, and easy to
+            under-observe. But it does challenge the idea that famousness alone produces report density.
+            Famous mythology can tell people what to imagine, but population and reporting access
+            determine what actually becomes data. The myth is enormous; the nearby reporting footprint
+            is small.
+          </p>
+        </div>
+        <div class="panel panel--stack">
+          <h3>Area 51 vs nearby reporting</h3>
+          <div class="callout-grid" id="area51-callout"></div>
+          <p class="figure-note">
+            Figure 7. Area 51 works best as a myth-vs-data check: culturally central, but far smaller
+            in report volume than Las Vegas or Nevada as a whole.
+          </p>
+        </div>
+      </section>
+
+      <section class="chapter split" id="duration">
+        <div class="copy">
+          <p class="kicker">Duration and shape</p>
+          <h2>Some shapes last longer in the story people tell.</h2>
+          <p>
+            Duration estimates are self-reported and inherently noisy, so this chart should not be
+            read as a stopwatch. Most common shape labels cluster around the same median of about
+            180 seconds. The useful signal is at the edges: "flash" reports have a median duration
+            of 30 seconds, "fireball" about 120 seconds, while "disk," "diamond," and especially
+            "changing" last longer.
+          </p>
+          <p>
+            That pattern adds something new to the story. Shape is not only about what people thought
+            they saw; it is also about how long they had to look. A short event leaves behind a simple
+            label like flash, fireball, or light. A longer event gives the reporter time to search for
+            structure, compare it to familiar forms, and decide whether it looked like a disk, diamond,
+            or changing object.
+          </p>
+        </div>
+        <div class="panel panel--stack">
+          <h3>Median duration by common shape</h3>
+          <svg id="duration-bars" class="chart" role="img" aria-label="Median UFO report duration by shape"></svg>
+          <h3 class="panel-subtitle">Duration distribution (log scale)</h3>
+          <svg id="duration-box" class="chart chart--short" role="img" aria-label="Box plot of UFO report durations by shape on a log-scaled axis"></svg>
+          <p class="figure-note">
+            Figure 8. Medians hide how wide these distributions are. The log-scale box plot shows that duration
+            estimates span seconds to hours; longer sightings give witnesses more time to assign complex shapes,
+            while short events become flashes or fireballs.
+          </p>
+        </div>
+        <div class="full-row">
+          <p>
+            The shape label and the duration are not independent observations, they are two aspects
+            of the same perceptual event. A brief, bright event becomes a flash, a prolonged uncertain
+            thing hovering overhead is easier to describe as changing, disk-like, or simply unknown.
+            The name partly encodes how long the witness had to look, and therefore how much time
+            they had to form a geometric impression before it was gone.
+          </p>
+          <p>
+            The overall median across all 80,332 reports is 180 seconds, exactly three minutes.
+            That is the length of a pop song or a commercial break, long enough to be certain you
+            saw something, rarely long enough to retrieve binoculars, call someone over, or start
+            recording. The archive is therefore largely a record of unverified solo observations
+            made in real time, with all the ambiguity that implies. Most reporters had three minutes
+            to decide what they saw, and then it was gone.
+          </p>
+          <p>
+            This connects the earlier figures without stretching the evidence. Figure 1 showed that
+            many reports use broad labels such as light, flash, fireball, or unknown. Figure 4 showed
+            when people are most likely to notice something. Duration adds the missing middle step:
+            how much time the witness had to turn that notice into a description. It also prepares the
+            next comparison, where the internet-era archive becomes larger, shorter, and more dominated
+            by light reports.
+          </p>
+        </div>
+      </section>
+
+      <section class="chapter split">
+        <div class="copy">
+          <p class="kicker">Before and after the web</p>
+          <h2>The internet era changes both volume and vocabulary.</h2>
+          <p>
+            The contrast is stark. Before 1995 the archive holds 7,767 reports, roughly 9.7% of the
+            total, and "disk" is the dominant shape, with a median duration of 300 seconds. After
+            1995, 72,565 reports pour in, "light" displaces "disk" at the top, and the median duration
+            falls to 180 seconds. This is one of the clearest pieces of evidence for the reporting-bias
+            argument: the internet era did not simply add more rows. It changed which kinds of sightings
+            entered the archive, making it larger, shorter, and more often described through lights.
+          </p>
+        </div>
+        <div class="panel panel--stack">
+          <h3>Era comparison</h3>
+          <div id="era-cards" class="era-grid" aria-label="Pre-internet and internet-era comparison"></div>
+          <p class="figure-note">
+            Figure 9. After 1995, reports become much more numerous and shorter on average. That points toward a
+            wider, lower-threshold reporting public rather than a simple change in the sky.
+          </p>
+        </div>
+        <div class="full-row">
+          <p>
+            This is not necessarily evidence that the sky changed. It suggests the reporting pool
+            changed, a broader, faster-moving public began filing shorter observations of simpler
+            phenomena. The classic flying saucer gave way to the glowing light, partly because more
+            people were reporting, and partly because a quick glance in a busy life does not leave
+            enough time to resolve a shape into a geometric silhouette.
+          </p>
+          <p>
+            There is also a second, smaller inflection visible in the data. After a relatively stable
+            stretch from 2005 to 2010 (roughly 4,000 reports per year), the archive spikes again,
+            5,107 in 2011, then 7,356 in 2012. That second surge aligns with the mass adoption of
+            smartphones, suddenly a camera and an always-on internet connection lived in every
+            pocket. The archive likely captures the early edge of a new reporting wave that has
+            since migrated to social media and apps entirely outside this dataset.
+          </p>
+        </div>
+      </section>
+
+      <section class="chapter split">
+        <div class="copy">
+          <p class="kicker">Language reveals the ordinary inside the strange</p>
+          <h2>People most often describe lights, motion, color, and formations.</h2>
+
+          <p>
+            When reading UFO reports, one might expect dramatic words about aliens, spaceships,
+            or extraterrestrial encounters. The word cloud tells a different story. Across more
+            than 80,000 comment fields, the most common words are much more ordinary: “light,”
+            “lights,” “bright,” “moving,” “orange,” “white,” and “red.” These are not the words
+            of close contact. They are the words of people trying to describe something distant,
+            visual, and difficult to identify. The words are not proof of what was in the sky, but
+            they are evidence of how people narrate ambiguity.
+          </p>
+        </div>
+
+        <div class="panel">
+          <h3>Common words in comments</h3>
+          <div id="word-cloud" class="word-cloud" aria-label="Common UFO report words"></div>
+          <p class="figure-note">
+            Figure 10. The most common words are observational: light, color, motion, speed, and formation. The
+            language is mostly about trying to describe uncertainty.
+          </p>
+        </div>
+
+        <div class="full-row">
+          <p>
+            The keen observer will notice that most of the largest words describe basic visual
+            properties. “Light” and “lights” dominate the figure, suggesting that many sightings
+            begin as bright objects in the sky rather than detailed encounters with a clear shape
+            or origin. Color words such as “orange,” “white,” “red,” “green,” and “blue” are also
+            common, which supports the idea that witnesses often report what they can directly see:
+            brightness, color, movement, and direction.
+          </p>
+
+          <p>
+            Shape and motion also play an important role. Words like “moving,” “flying,” “hovering,”
+            “slowly,” “fast,” “triangle,” “formation,” and “star” show how witnesses try to make
+            sense of what they saw by comparing it to familiar patterns. A moving light becomes a
+            “star,” a group of lights becomes a “formation,” and an unclear outline becomes a
+            “triangle” or a “craft.” In this way, the language of the reports shows how people turn
+            uncertain visual impressions into something that can be written down.
+          </p>
+
+          <p>
+            One interesting detail is that “craft” appears prominently, while more sensational words
+            such as “alien” or “extraterrestrial” do not appear among the most common words. This
+            suggests that many reports are observational rather than strongly interpretive. People are
+            usually describing what they perceived, not necessarily claiming to know what it was. That
+            makes the comments useful not as proof of visitors from elsewhere, but as records of how
+            people describe uncertainty.
+          </p>
+        </div>
+      </section>
+      <section class="chapter map-chapter" id="hotspots">
+        <div class="copy copy--wide">
+          <p class="kicker">Do hotspots persist?</p>
+          <h2>A burst is different from a place that keeps reappearing.</h2>
+          <p>
+            When looking at UFO sightings on a map, it is tempting to treat every dense area as a
+            meaningful hotspot. But not all hotspots tell the same story. Some places receive many
+            reports in one decade and then almost disappear, perhaps because of a local event, a period
+            of media attention, or a few very active observers. Other places keep appearing decade
+            after decade, and these are more interesting because they suggest a more stable pattern in
+            the archive.
+          </p>
+          <p>
+            The decade slider shows where reports were concentrated in each period, while the
+            persistence button shows which areas return across several decades. By switching between
+            the two views, the figure separates temporary bursts from places that repeatedly produce
+            reports. In other words, the map does not only ask where many sightings were reported, but
+            also where reporting has been consistent over time.
+          </p>
+          <p>
+            The United States dominates the map, especially in the 2000s and 2010s. The strongest
+            clusters appear along the Pacific Coast, in parts of the Southwest, around Florida, and
+            through the Great Lakes corridor. These are regions with large populations, strong internet
+            access, and a closer connection to the American reporting system behind the data. Looking
+            beyond the United States, smaller clusters appear in Western Europe, Australia, and parts
+            of Asia, but they are much more scattered.
+          </p>
+          <p>
+            The figure therefore highlights an important limitation of the dataset. A hotspot is not
+            simply a place where UFOs appear more often. It is a place where sightings are more often
+            turned into data. Persistent hotspots should be read as a combination of population,
+            attention, reporting habits, and access to infrastructure, not as automatic evidence of
+            paranormal recurrence.
+          </p>
+        </div>
+        <div class="map-shell">
+          <div class="map-controls">
+            <label for="decade-slider">Decade <span id="decade-label"></span></label>
+            <input id="decade-slider" type="range" min="1900" max="2010" step="10" value="2000">
+            <div class="toggle-row" role="group" aria-label="Map mode">
+              <button class="mode-button active" data-map-mode="reports">Decade count</button>
+              <button class="mode-button" data-map-mode="persistence">Persistence</button>
+            </div>
+          </div>
+          <svg id="hotspot-map" role="img" aria-label="Interactive hotspot persistence map"></svg>
+          <p class="figure-note figure-note--map">
+            Figure 11. The map separates temporary bursts from persistent reporting places. Persistent hotspots are
+            more likely to reflect stable communities, population density, and reporting habits.
+          </p>
+          <div id="tooltip" class="tooltip" hidden></div>
+        </div>
+      </section>
+
+      <section class="chapter conclusion">
+        <p class="kicker">What are we really seeing?</p>
+        <h2>The data does not answer whether UFOs are real.</h2>
+        <p>
+          It answers something more measurable, UFO reports are patterned by time, place, language,
+          visibility, population, and reporting infrastructure. The 80,332 entries in this archive
+          form a portrait of human attention, when people look up, what they notice, and how the
+          systems around them shape what gets written down. The mystery is partly in the sky, but
+          at least as much in the pipeline.
+        </p>
+        <div class="panel country-panel">
+          <h3>Global perspective</h3>
+          <svg id="country-bars" class="chart chart--short" role="img" aria-label="Country report counts"></svg>
+          <p class="figure-note">
+            Figure 12. The international comparison is the final bias check: this is not a balanced global sky survey,
+            but a US-centered archive with some international spillover.
+          </p>
+        </div>
+        <p>
+          The final chart takes a step back and asks a simple question: how global is this supposedly
+          global archive? At first glance, the presence of countries such as Canada, the United Kingdom,
+          Australia, and Germany suggests an international dataset. However, the distribution tells a
+          different story. The United States does not simply lead the ranking; it dominates it. With
+          more than 65,000 reports, the American count is over twenty times larger than Canada's and
+          more than thirty times larger than the United Kingdom's.
+        </p>
+        <p>
+          The scale gap is so large that most other countries almost disappear on the same axis. This
+          does not mean that the sky above the United States is uniquely strange. It means that the
+          reporting pathway is much easier to access from there. NUFORC is an American organization,
+          and the archive is built around a US-based, English-language reporting system. That makes
+          the chart better understood as a map of reporting visibility than as a map of UFO activity.
+        </p>
+        <p>
+          For a sighting to appear in the archive, several things had to happen. Someone had to notice
+          it, interpret it as unusual, know that NUFORC existed, trust the reporting system, have access
+          to a submission route, and often feel comfortable writing in English. Each of these steps acts
+          as a filter. Countries with fewer records may have fewer sightings, but they may also have
+          different languages, different media systems, different reporting habits, or simply weaker
+          connections to this particular archive.
+        </p>
+        <p>
+          The contrast between the United States and the rest of the world highlights the main message
+          of the project. The archive does not only measure strange things in the sky. It also measures
+          who had a pathway for turning those strange moments into structured data. What we can count
+          is therefore not the mystery itself, but the human decision to notice it, describe it, and
+          report it.
+        </p>
+        <div class="reference-list">
+          <a href="https://mavenanalytics.io/data-playground/ufo-sightings">Maven dataset page</a>
+          <a href="https://zenodo.org/records/1205624">Archived NUFORC CSV</a>
+          <a href="https://nuforc.org/about-us/">NUFORC about page</a>
+          <a href="https://www.pewresearch.org/internet/fact-sheet/internet-broadband/">Pew internet adoption data</a>
+          <a href="https://idl.uw.edu/papers/narrative">Segel & Heer</a>
+          <a href="https://github.com/suneman/socialdata2026/wiki/Final-Project">Course requirements</a>
+        </div>
+      </section>
+    </main>
+
+    <script src="assets/d3.v7.min.js"></script>
+    <script src="assets/topojson-client.min.js"></script>
+    <script src="app.js?v=7"></script>
+  </body>
+</html>
