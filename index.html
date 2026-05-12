@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Seeing Things</title>
-    <link rel="stylesheet" href="styles.css?v=10">
+    <link rel="stylesheet" href="styles.css?v=11">
   </head>
   <body>
     <header class="hero">
@@ -81,13 +81,13 @@
         </div>
         <div class="panel">
           <h3>Top reported shape labels</h3>
-          <svg id="shape-bars" class="chart" role="img" aria-label="Bar chart of top reported UFO shapes"></svg>
+          <div id="shape-bars" class="chart plotly-chart" role="img" aria-label="Bar chart of top reported UFO shapes"></div>
           <p class="figure-note">
             Figure 1a. Shape labels mostly describe uncertainty at a distance. The dominance of "light" suggests
             many reports are brief luminous observations, not detailed close-up encounters.
           </p>
           <h3 class="panel-subtitle">Grouped by visual impression</h3>
-          <div id="shape-group-stack" class="shape-stack" role="img" aria-label="Stacked bar chart of grouped UFO shape categories">
+          <div id="shape-group-stack" class="chart chart--short plotly-chart" role="img" aria-label="Stacked bar chart of grouped UFO shape categories">
             <div class="shape-stack__bar">
               <div class="shape-stack__segment" style="width: 30.0%; background: #d65d47;" title="lights / flashes: 24,101 reports (30.0%)"></div>
               <div class="shape-stack__segment" style="width: 28.3%; background: #117c78;" title="round forms: 22,700 reports (28.3%)"></div>
@@ -186,7 +186,7 @@
             <button class="mode-button active" data-annual-scale="linear">Linear</button>
             <button class="mode-button" data-annual-scale="log">Log</button>
           </div>
-          <svg id="annual-line" class="chart" role="img" aria-label="Line chart of UFO reports by year"></svg>
+          <div id="annual-line" class="chart plotly-chart" role="img" aria-label="Line chart of UFO reports by year"></div>
           <p class="figure-note">
             Figure 2. The mid-1990s jump is the central clue: the archive gets louder when reporting becomes easier.
             Use the log toggle to make early decades visible without flattening them into the baseline.
@@ -256,7 +256,7 @@
         </div>
         <div class="panel">
           <h3>Annual reports (annotated)</h3>
-          <img src="figures/annual_by_year.png" alt="Annual UFO reports annotated with X-Files" style="max-width:100%;height:auto;border:1px solid #ccc;">
+          <div id="annual-annotated" class="chart plotly-chart" role="img" aria-label="Annual UFO reports annotated with X-Files"></div>
           <p class="figure-note">
             Figure 3. The marker is not causal proof. It marks the cultural side of a broader 1990s
             shift, while the 1995 internet-era split marks the reporting-infrastructure side.
@@ -284,7 +284,7 @@
         </div>
         <div class="panel">
           <h3>Reports by month and hour</h3>
-          <svg id="heatmap" class="chart heatmap" role="img" aria-label="Heatmap of UFO reports by month and hour"></svg>
+          <div id="heatmap" class="chart heatmap plotly-chart" role="img" aria-label="Heatmap of UFO reports by month and hour"></div>
           <p class="figure-note">
             Figure 4. The strongest pattern is human availability: warm months and evening hours create more chances
             for people to notice and report ambiguous lights.
@@ -351,9 +351,9 @@
             <button class="mode-button active" data-state-mode="reports">Raw</button>
             <button class="mode-button" data-state-mode="reports_per_million">Per million</button>
           </div>
-          <svg id="state-bars" class="chart" role="img" aria-label="US state report ranking"></svg>
+          <div id="state-bars" class="chart plotly-chart" role="img" aria-label="US state report ranking"></div>
           <h3 class="panel-subtitle">State choropleth</h3>
-          <svg id="state-map" class="chart chart--short" role="img" aria-label="US state choropleth map of UFO reports"></svg>
+          <div id="state-map" class="chart chart--short plotly-chart" role="img" aria-label="US state choropleth map of UFO reports"></div>
           <p class="figure-note">
             Figure 5. Raw counts mostly reward large populations. Switching to per-million reshuffles the story by
             comparing states on a common denominator. The choropleth mirrors the same toggle geographically.
@@ -427,7 +427,7 @@
         </div>
         <div class="panel panel--stack">
           <h3>Top US city hotspots</h3>
-          <svg id="city-bars" class="chart" role="img" aria-label="Top US city UFO report counts"></svg>
+          <div id="city-bars" class="chart plotly-chart" role="img" aria-label="Top US city UFO report counts"></div>
           <p class="figure-note">
             Figure 6. The highest city counts are ordinary urban reporting hubs: Seattle, Phoenix,
             Las Vegas, Los Angeles, San Diego, Portland, Houston, and Chicago.
@@ -468,7 +468,7 @@
         </div>
         <div class="panel panel--stack">
           <h3>Area 51 vs nearby reporting</h3>
-          <div class="callout-grid" id="area51-callout"></div>
+          <div class="chart chart--short plotly-chart" id="area51-callout" role="img" aria-label="Area 51 reporting comparison"></div>
           <p class="figure-note">
             Figure 7. Area 51 works best as a myth-vs-data check: culturally central, but far smaller
             in report volume than Las Vegas or Nevada as a whole.
@@ -497,9 +497,9 @@
         </div>
         <div class="panel panel--stack">
           <h3>Median duration by common shape</h3>
-          <svg id="duration-bars" class="chart" role="img" aria-label="Median UFO report duration by shape"></svg>
+          <div id="duration-bars" class="chart plotly-chart" role="img" aria-label="Median UFO report duration by shape"></div>
           <h3 class="panel-subtitle">Duration distribution (log scale)</h3>
-          <svg id="duration-box" class="chart chart--short" role="img" aria-label="Box plot of UFO report durations by shape on a log-scaled axis"></svg>
+          <div id="duration-box" class="chart chart--short plotly-chart" role="img" aria-label="Box plot of UFO report durations by shape on a log-scaled axis"></div>
           <p class="figure-note">
             Figure 8. Medians hide how wide these distributions are. The log-scale box plot shows that duration
             estimates span seconds to hours; longer sightings give witnesses more time to assign complex shapes,
@@ -548,7 +548,7 @@
         </div>
         <div class="panel panel--stack">
           <h3>Era comparison</h3>
-          <div id="era-cards" class="era-grid" aria-label="Pre-internet and internet-era comparison"></div>
+          <div id="era-cards" class="chart chart--short plotly-chart" role="img" aria-label="Pre-internet and internet-era comparison"></div>
           <p class="figure-note">
             Figure 9. After 1995, reports become much more numerous and shorter on average. That points toward a
             wider, lower-threshold reporting public rather than a simple change in the sky.
@@ -591,7 +591,7 @@
 
         <div class="panel">
           <h3>Common words in comments</h3>
-          <div id="word-cloud" class="word-cloud" aria-label="Common UFO report words"></div>
+          <div id="word-cloud" class="chart chart--short plotly-chart" role="img" aria-label="Common UFO report words"></div>
           <p class="figure-note">
             Figure 10. The most common words are observational: light, color, motion, speed, and formation. The
             language is mostly about trying to describe uncertainty.
@@ -671,7 +671,7 @@
               <button class="mode-button" data-map-mode="persistence">Persistence</button>
             </div>
           </div>
-          <svg id="hotspot-map" role="img" aria-label="Interactive hotspot persistence map"></svg>
+          <div id="hotspot-map" role="img" aria-label="Interactive hotspot persistence map"></div>
           <p class="figure-note figure-note--map">
             Figure 11. The map separates temporary bursts from persistent reporting places. Persistent hotspots are
             more likely to reflect stable communities, population density, and reporting habits.
@@ -692,7 +692,7 @@
         </p>
         <div class="panel country-panel">
           <h3>Global perspective</h3>
-          <svg id="country-bars" class="chart chart--short" role="img" aria-label="Country report counts"></svg>
+          <div id="country-bars" class="chart chart--short plotly-chart" role="img" aria-label="Country report counts"></div>
           <p class="figure-note">
             Figure 12. The international comparison is the final bias check: this is not a balanced global sky survey,
             but a US-centered archive with some international spillover.
@@ -741,6 +741,7 @@
 
     <script src="assets/d3.v7.min.js"></script>
     <script src="assets/topojson-client.min.js"></script>
-    <script src="app.js?v=7"></script>
+    <script src="assets/plotly-2.35.2.min.js"></script>
+    <script src="app.js?v=8"></script>
   </body>
 </html>

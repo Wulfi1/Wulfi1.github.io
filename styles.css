@@ -242,6 +242,18 @@ p {
   display: block;
 }
 
+.plotly-chart {
+  overflow: hidden;
+}
+
+.plotly-chart .main-svg {
+  font-family: inherit !important;
+}
+
+.plotly-chart .modebar {
+  right: 4px !important;
+}
+
 .heatmap {
   min-height: 420px;
 }
