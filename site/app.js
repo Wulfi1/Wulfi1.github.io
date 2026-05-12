@@ -191,11 +191,59 @@ function renderShapeGroupStack(shapes) {
     hovertemplate: `<b>${row.label}</b><br>%{x:,} reports<br>%{customdata[0]} of archive<br><span style="font-size:11px">%{customdata[1]}</span><extra></extra>`
   })), baseLayout("#shape-group-stack", {
     barmode: "stack",
-    margin: { t: 6, r: 14, b: 44, l: 108 },
-    xaxis: { title: "reports", tickformat: "~s", gridcolor: "#eee7da", zeroline: false },
-    yaxis: { showgrid: false },
-    legend: { orientation: "h", y: -0.22, x: 0 }
-  }));
+    height: 120,
+    margin: { t: 6, r: 8, b: 6, l: 8 },
+    showlegend: false,
+    paper_bgcolor: "rgba(0,0,0,0)",
+    plot_bgcolor: "rgba(0,0,0,0)",
+    xaxis: {
+      range: [0, total],
+      fixedrange: true,
+      showgrid: false,
+      zeroline: false,
+      showticklabels: false,
+      ticks: "",
+      showline: false
+    },
+    yaxis: {
+      fixedrange: true,
+      showgrid: false,
+      zeroline: false,
+      showticklabels: false,
+      ticks: "",
+      showline: false
+    }
+  }), { displayModeBar: false });
+
+  const legend = document.querySelector("#shape-group-legend");
+  if (!legend) return;
+
+  legend.innerHTML = "";
+  rows.forEach((row) => {
+    const share = row.reports / total;
+    const item = document.createElement("div");
+    item.className = "shape-stack__item";
+
+    const swatch = document.createElement("span");
+    swatch.className = "shape-stack__swatch";
+    swatch.style.background = row.fill;
+
+    const label = document.createElement("span");
+    label.className = "shape-stack__label";
+    label.textContent = row.label;
+
+    const percent = document.createElement("strong");
+    percent.textContent = pct(share);
+
+    const count = document.createElement("small");
+    count.textContent = fmt(row.reports);
+
+    item.appendChild(swatch);
+    item.appendChild(label);
+    item.appendChild(percent);
+    item.appendChild(count);
+    legend.appendChild(item);
+  });
 }
 
 function renderLabeledBars(selector, data, options) {

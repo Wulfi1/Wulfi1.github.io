@@ -288,6 +288,14 @@ p {
   margin-top: 12px;
 }
 
+#shape-group-stack {
+  min-height: 120px;
+  padding: 6px 8px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #fffaf0;
+}
+
 .shape-stack__bar {
   display: flex;
   width: 100%;
