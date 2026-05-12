@@ -327,6 +327,7 @@ function renderHeatmap(data) {
     y: monthNames,
     z,
     colorscale: "YlOrRd",
+    reversescale: true,
     colorbar: { title: "reports", tickformat: "~s" },
     hovertemplate: "<b>%{y}, %{x}:00</b><br>%{z:,} reports<extra></extra>"
   }], baseLayout("#heatmap", {
@@ -370,6 +371,7 @@ function renderStateSection(states) {
       text: states.map((d) => d.state_name),
       customdata: states.map((d) => [d.reports, d.reports_per_million]),
       colorscale: mode === "reports" ? "Blues" : "OrRd",
+      reversescale: true,
       marker: { line: { color: "#ffffff", width: 0.7 } },
       colorbar: { title: mode === "reports" ? "reports" : "per million", tickformat: "~s" },
       hovertemplate: mode === "reports"
@@ -626,6 +628,7 @@ function renderHotspotMap(hexDecades, hotspots) {
         size: markerSizes(rows, sizeValue),
         color: rows.map(value),
         colorscale: mode === "reports" ? "OrRd" : "PuBuGn",
+        reversescale: true,
         opacity: 0.76,
         line: { color: "#24322d", width: 0.35 },
         colorbar: { title: mode === "reports" ? "reports" : "persistence", tickformat: mode === "reports" ? "~s" : ".0%" }

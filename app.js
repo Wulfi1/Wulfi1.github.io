@@ -234,12 +234,16 @@ function renderAnnualLine(data) {
   });
 
   function draw() {
+    const years = data.map((d) => +d.year).filter((d) => Number.isFinite(d));
+    const minYear = d3.min(years);
+    const maxYear = d3.max(years);
+    const xRange = (minYear != null && maxYear != null) ? [minYear - 0.5, maxYear + 0.5] : undefined;
     const maxY = d3.max(data, (d) => d.reports) || 1;
     const y = mode === "log" ? data.map((d) => Math.max(1, d.reports)) : data.map((d) => d.reports);
     plot("#annual-line", [{
       type: "scatter",
       mode: "lines+markers",
-      x: data.map((d) => d.year),
+      x: years,
       y,
       customdata: data.map((d) => d.reports),
       line: { color: colors.coral, width: 3, shape: "spline" },
@@ -249,6 +253,7 @@ function renderAnnualLine(data) {
       margin: { t: 18, r: 24, b: 48, l: 58 },
       xaxis: {
         title: "year",
+        ...(xRange ? { range: xRange } : {}),
         tickformat: "d",
         gridcolor: "#eee7da",
         zeroline: false
@@ -291,11 +296,15 @@ function renderAnnualLine(data) {
 }
 
 function renderAnnotatedAnnual(data) {
+  const years = data.map((d) => +d.year).filter((d) => Number.isFinite(d));
+  const minYear = d3.min(years);
+  const maxYear = d3.max(years);
+  const xRange = (minYear != null && maxYear != null) ? [minYear - 0.5, maxYear + 0.5] : undefined;
   const maxY = d3.max(data, (d) => d.reports) || 1;
   plot("#annual-annotated", [{
     type: "scatter",
     mode: "lines",
-    x: data.map((d) => d.year),
+    x: years,
     y: data.map((d) => d.reports),
     fill: "tozeroy",
     line: { color: colors.blue, width: 2.5, shape: "spline" },
@@ -303,7 +312,7 @@ function renderAnnotatedAnnual(data) {
     hovertemplate: "<b>%{x}</b><br>%{y:,} reports<extra></extra>"
   }], baseLayout("#annual-annotated", {
     margin: { t: 16, r: 22, b: 48, l: 62 },
-    xaxis: { title: "year", tickformat: "d", gridcolor: "#eee7da", zeroline: false },
+    xaxis: { title: "year", ...(xRange ? { range: xRange } : {}), tickformat: "d", gridcolor: "#eee7da", zeroline: false },
     yaxis: { title: "reports", range: [0, maxY * 1.12], tickformat: "~s", gridcolor: "#eee7da", zeroline: false },
     shapes: [
       { type: "line", xref: "x", yref: "paper", x0: 1982, x1: 1982, y0: 0, y1: 0.55, line: { color: colors.gold, width: 2, dash: "dot" } },
@@ -327,6 +336,7 @@ function renderHeatmap(data) {
     y: monthNames,
     z,
     colorscale: "YlOrRd",
+    reversescale: true,
     colorbar: { title: "reports", tickformat: "~s" },
     hovertemplate: "<b>%{y}, %{x}:00</b><br>%{z:,} reports<extra></extra>"
   }], baseLayout("#heatmap", {
@@ -370,6 +380,7 @@ function renderStateSection(states) {
       text: states.map((d) => d.state_name),
       customdata: states.map((d) => [d.reports, d.reports_per_million]),
       colorscale: mode === "reports" ? "Blues" : "OrRd",
+      reversescale: true,
       marker: { line: { color: "#ffffff", width: 0.7 } },
       colorbar: { title: mode === "reports" ? "reports" : "per million", tickformat: "~s" },
       hovertemplate: mode === "reports"
@@ -626,6 +637,7 @@ function renderHotspotMap(hexDecades, hotspots) {
         size: markerSizes(rows, sizeValue),
         color: rows.map(value),
         colorscale: mode === "reports" ? "OrRd" : "PuBuGn",
+        reversescale: true,
         opacity: 0.76,
         line: { color: "#24322d", width: 0.35 },
         colorbar: { title: mode === "reports" ? "reports" : "persistence", tickformat: mode === "reports" ? "~s" : ".0%" }
