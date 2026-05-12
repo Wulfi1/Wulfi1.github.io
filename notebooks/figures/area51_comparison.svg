@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 320">
+    <style>
+      .bg { fill: #fffdf8; }
+      .axis { stroke: #d8d0c2; stroke-width: 1; }
+      .grid { stroke: #eee7da; stroke-width: 1; }
+      .label { fill: #62706c; font: 12px system-ui, sans-serif; }
+      .title { fill: #17201d; font: 700 18px system-ui, sans-serif; }
+      .note { fill: #7a5d2a; font: 700 12px system-ui, sans-serif; }
+    </style>
+    <rect width="900" height="320" class="bg"/><text x="170" y="26" class="title">Area 51 vs nearby reporting</text><text x="158" y="91.63333333333333" text-anchor="end" class="label">Area 51 region</text><rect x="170" y="48.0" width="16.9" height="67.3" rx="3" fill="#d99a2b"/><text x="194.93648816936488" y="91.63333333333333" text-anchor="start" class="label">20</text><text x="178" y="91.63333333333333" text-anchor="start" class="label">nearby bounding region</text><text x="158" y="170.96666666666667" text-anchor="end" class="label">Las Vegas</text><rect x="170" y="127.3" width="307.4" height="67.3" rx="3" fill="#d99a2b"/><text x="485.39726027397256" y="170.96666666666667" text-anchor="start" class="label">363</text><text x="178" y="170.96666666666667" text-anchor="start" class="label">city reports</text><text x="158" y="250.29999999999998" text-anchor="end" class="label">Nevada</text><rect x="170" y="206.7" width="680.0" height="67.3" rx="3" fill="#d99a2b"/><text x="858.0" y="250.29999999999998" text-anchor="start" class="label">803</text><text x="178" y="250.29999999999998" text-anchor="start" class="label">all state reports</text></svg>
