@@ -22,6 +22,66 @@ def write(name: str, svg: str) -> None:
     (FIG_DIR / name).write_text(svg, encoding="utf-8")
 
 
+def contiguous_us_state_paths(sx, sy) -> list[str]:
+    """Build simple SVG paths from the local US states TopoJSON."""
+    topo = load("states-10m.json")
+    scale_x, scale_y = topo["transform"]["scale"]
+    translate_x, translate_y = topo["transform"]["translate"]
+    excluded = {
+        "Alaska",
+        "Hawaii",
+        "American Samoa",
+        "Guam",
+        "Commonwealth of the Northern Mariana Islands",
+        "Puerto Rico",
+        "United States Virgin Islands",
+    }
+
+    decoded_arcs = []
+    for arc in topo["arcs"]:
+        x = 0
+        y = 0
+        points = []
+        for dx, dy in arc:
+            x += dx
+            y += dy
+            points.append((x * scale_x + translate_x, y * scale_y + translate_y))
+        decoded_arcs.append(points)
+
+    def arc_points(index: int):
+        return decoded_arcs[index] if index >= 0 else list(reversed(decoded_arcs[-index - 1]))
+
+    def path_from_ring(ring):
+        coords = []
+        for index in ring:
+            points = arc_points(index)
+            if coords and points:
+                points = points[1:]
+            coords.extend(points)
+        if len(coords) < 3:
+            return ""
+        first_lon, first_lat = coords[0]
+        commands = [f"M {sx(first_lon):.1f} {sy(first_lat):.1f}"]
+        commands.extend(f"L {sx(lon):.1f} {sy(lat):.1f}" for lon, lat in coords[1:])
+        commands.append("Z")
+        return " ".join(commands)
+
+    paths = []
+    for geometry in topo["objects"]["states"]["geometries"]:
+        if geometry["properties"]["name"] in excluded:
+            continue
+        polygons = geometry["arcs"] if geometry["type"] == "MultiPolygon" else [geometry["arcs"]]
+        pieces = []
+        for polygon in polygons:
+            for ring in polygon:
+                path = path_from_ring(ring)
+                if path:
+                    pieces.append(path)
+        if pieces:
+            paths.append(" ".join(pieces))
+    return paths
+
+
 def axis_label(text: str, x: float, y: float, anchor: str = "middle") -> str:
     return f'<text x="{x}" y="{y}" text-anchor="{anchor}" class="label">{text}</text>'
 
@@ -376,19 +436,22 @@ def word_cloud_svg() -> str:
 
 def hotspot_decade_svg(decade: int = 2000) -> str:
     """Static decade snapshot of hotspot bins (proxy for the slider view)."""
-    rows = [d for d in load("hex_decade_bins.json") if int(d["decade"]) == int(decade)]
-    rows = sorted(rows, key=lambda d: int(d["reports"]), reverse=True)[:500]
+    rows = [
+        d for d in load("hex_decade_bins.json")
+        if int(d["decade"]) == int(decade)
+        and -126 <= float(d["lon"]) <= -66
+        and 24 <= float(d["lat"]) <= 50
+    ]
+    rows = sorted(rows, key=lambda d: int(d["reports"]), reverse=True)[:360]
     width, height = 900, 520
-    left, right, top, bottom = 28, 28, 42, 42
-    parts = [chart_style(), f'<rect width="{width}" height="{height}" class="bg"/>', f'<text x="{left}" y="26" class="title">Hotspot decade snapshot: {decade}s</text>']
+    left, right, top, bottom = 46, 36, 54, 52
+    parts = [chart_style(), f'<rect width="{width}" height="{height}" class="bg"/>', f'<text x="{left}" y="26" class="title">US hotspot decade snapshot: {decade}s</text>']
     if not rows:
         parts.append(axis_label("No data for this decade.", left, top + 40, "start"))
         return f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {width} {height}">{"".join(parts)}</svg>'
 
-    lons = [float(d["lon"]) for d in rows]
-    lats = [float(d["lat"]) for d in rows]
-    min_lon, max_lon = min(lons), max(lons)
-    min_lat, max_lat = min(lats), max(lats)
+    min_lon, max_lon = -126, -66
+    min_lat, max_lat = 24, 50
     max_reports = max(int(d["reports"]) for d in rows)
 
     def sx(lon):
@@ -397,14 +460,21 @@ def hotspot_decade_svg(decade: int = 2000) -> str:
     def sy(lat):
         return height - bottom - (lat - min_lat) / (max_lat - min_lat + 1e-9) * (height - top - bottom)
 
+    parts.append(
+        f'<rect x="{left}" y="{top}" width="{width-left-right}" height="{height-top-bottom}" '
+        'fill="#f8f2e8" stroke="#d8d0c2" stroke-width="1"/>'
+    )
+    for path in contiguous_us_state_paths(sx, sy):
+        parts.append(f'<path d="{path}" fill="#f2eadc" stroke="#c5baa6" stroke-width="0.65"/>')
+
     for d in rows:
-        r = 2.0 + math.sqrt(int(d["reports"]) / max_reports) * 12.0
+        r = 2.2 + math.sqrt(int(d["reports"]) / max_reports) * 15.0
         parts.append(
             f'<circle cx="{sx(float(d["lon"])):.1f}" cy="{sy(float(d["lat"])):.1f}" r="{r:.1f}" '
             f'fill="#117c78" fill-opacity="0.42" stroke="#17201d" stroke-width="0.3"/>'
         )
 
-    parts.append(axis_label("Static proxy for the slider view (each dot is one spatial bin).", left, height - 14, "start"))
+    parts.append(axis_label("Static proxy for the slider view: continental US bins only, sized by reports.", left, height - 14, "start"))
     return f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {width} {height}">{"".join(parts)}</svg>'
 
 
