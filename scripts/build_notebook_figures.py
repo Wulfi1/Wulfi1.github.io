@@ -9,9 +9,8 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-SITE_DATA = ROOT / "site" / "data"
+SITE_DATA = ROOT / "data"
 FIG_DIR = ROOT / "notebooks" / "figures"
-SITE_FIG_DIR = ROOT / "site" / "notebooks" / "figures"
 
 
 def load(name: str):
@@ -19,9 +18,8 @@ def load(name: str):
 
 
 def write(name: str, svg: str) -> None:
-    for fig_dir in [FIG_DIR, SITE_FIG_DIR]:
-        fig_dir.mkdir(parents=True, exist_ok=True)
-        (fig_dir / name).write_text(svg, encoding="utf-8")
+    FIG_DIR.mkdir(parents=True, exist_ok=True)
+    (FIG_DIR / name).write_text(svg, encoding="utf-8")
 
 
 def axis_label(text: str, x: float, y: float, anchor: str = "middle") -> str:
@@ -331,28 +329,47 @@ def country_bars_svg() -> str:
 
 def word_cloud_svg() -> str:
     words = load("summary.json")["top_words"][:28]
-    width, height = 900, 420
-    left = 42
+    width, height = 900, 440
+    left, right, top, bottom = 42, 42, 54, 54
     max_count = max(w["count"] for w in words) if words else 1
 
     def font_size(c):
         t = math.sqrt(c / max_count)
-        return 16 + t * 36
+        return 15 + t * 34
 
     parts = [chart_style(), f'<rect width="{width}" height="{height}" class="bg"/>', f'<text x="{left}" y="26" class="title">Common words in report comments</text>']
-    cx, cy = width * 0.52, height * 0.56
     palette = ["#117c78", "#d65d47", "#d99a2b", "#3f6f9f", "#8d6b2f", "#17201d"]
+
+    rows: list[list[dict[str, object]]] = []
+    max_row_width = width - left - right
     for i, w in enumerate(words):
-        angle = i * 2.399963
-        radius = math.sqrt(i) * 14
-        x = cx + math.cos(angle) * radius
-        y = cy + math.sin(angle) * radius
         size = font_size(w["count"])
-        color = palette[i % len(palette)]
-        parts.append(
-            f'<text x="{x:.1f}" y="{y:.1f}" text-anchor="middle" '
-            f'fill="{color}" font-size="{size:.1f}" font-family="system-ui, sans-serif">{w["word"]}</text>'
-        )
+        # A stable, conservative text-width estimate. SVG text has no layout
+        # pass here, so leave enough slack to prevent visual collisions.
+        text_width = len(w["word"]) * size * 0.62 + 18
+        item = {**w, "index": i, "size": size, "width": text_width}
+        if not rows or sum(float(d["width"]) for d in rows[-1]) + text_width > max_row_width:
+            rows.append([])
+        rows[-1].append(item)
+
+    row_heights = [max(float(d["size"]) for d in row) * 1.22 for row in rows]
+    total_height = sum(row_heights)
+    y = top + max(0, (height - top - bottom - total_height) / 2)
+
+    for row, row_height in zip(rows, row_heights):
+        row_width = sum(float(d["width"]) for d in row)
+        x = left + (max_row_width - row_width) / 2
+        baseline = y + row_height * 0.76
+        for item in row:
+            size = float(item["size"])
+            color = palette[int(item["index"]) % len(palette)]
+            parts.append(
+                f'<text x="{x + float(item["width"]) / 2:.1f}" y="{baseline:.1f}" text-anchor="middle" '
+                f'fill="{color}" font-size="{size:.1f}" font-family="system-ui, sans-serif">{item["word"]}</text>'
+            )
+            x += float(item["width"])
+        y += row_height
+
     parts.append(axis_label("A vocabulary of observation (light, bright, moving, colors) more than certainty.", left, height - 14, "start"))
     return f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {width} {height}">{"".join(parts)}</svg>'
 

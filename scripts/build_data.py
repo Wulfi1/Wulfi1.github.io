@@ -21,12 +21,16 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-RAW_PATH = ROOT / "data" / "raw" / "ufo_sightings_raw.csv"
-PROCESSED_DIR = ROOT / "data" / "processed"
-SITE_DATA_DIR = ROOT / "site" / "data"
+RAW_CANDIDATES = [
+    ROOT / "dataset" / "raw" / "ufo_sightings_raw.csv",
+    ROOT / "data" / "raw" / "ufo_sightings_raw.csv",
+]
+RAW_PATH = next((path for path in RAW_CANDIDATES if path.exists()), RAW_CANDIDATES[0])
+PROCESSED_DIR = ROOT / "dataset" / "processed"
+DATA_DIR = ROOT / "data"
 
 CLEAN_PATH = PROCESSED_DIR / "ufo_sightings_clean.csv"
-SUMMARY_PATH = SITE_DATA_DIR / "summary.json"
+SUMMARY_PATH = DATA_DIR / "summary.json"
 
 RAW_COLUMNS = [
     "datetime_raw",
@@ -304,7 +308,7 @@ def build() -> None:
         raise SystemExit(f"Missing raw file: {RAW_PATH}")
 
     PROCESSED_DIR.mkdir(parents=True, exist_ok=True)
-    SITE_DATA_DIR.mkdir(parents=True, exist_ok=True)
+    DATA_DIR.mkdir(parents=True, exist_ok=True)
 
     rows, issues = load_clean_rows()
     write_csv(CLEAN_PATH, rows, CLEAN_COLUMNS)
@@ -590,24 +594,24 @@ def build() -> None:
     }
 
     write_json(SUMMARY_PATH, summary)
-    write_json(SITE_DATA_DIR / "annual_reports.json", year_data)
-    write_json(SITE_DATA_DIR / "month_hour.json", heatmap_data)
-    write_json(SITE_DATA_DIR / "shape_counts.json", shape_data)
-    write_json(SITE_DATA_DIR / "shape_by_decade.json", shape_decade_data)
-    write_json(SITE_DATA_DIR / "country_counts.json", country_data)
-    write_json(SITE_DATA_DIR / "state_counts.json", state_data)
-    write_json(SITE_DATA_DIR / "city_counts.json", city_data)
-    write_json(SITE_DATA_DIR / "duration_by_shape.json", duration_shape_data)
-    write_json(SITE_DATA_DIR / "duration_by_era_shape.json", duration_era_shape_data)
-    write_json(SITE_DATA_DIR / "area51_summary.json", area51_summary)
-    write_json(SITE_DATA_DIR / "hotspots.json", hotspot_rows[:600])
-    write_json(SITE_DATA_DIR / "hex_decade_bins.json", decade_bin_rows)
+    write_json(DATA_DIR / "annual_reports.json", year_data)
+    write_json(DATA_DIR / "month_hour.json", heatmap_data)
+    write_json(DATA_DIR / "shape_counts.json", shape_data)
+    write_json(DATA_DIR / "shape_by_decade.json", shape_decade_data)
+    write_json(DATA_DIR / "country_counts.json", country_data)
+    write_json(DATA_DIR / "state_counts.json", state_data)
+    write_json(DATA_DIR / "city_counts.json", city_data)
+    write_json(DATA_DIR / "duration_by_shape.json", duration_shape_data)
+    write_json(DATA_DIR / "duration_by_era_shape.json", duration_era_shape_data)
+    write_json(DATA_DIR / "area51_summary.json", area51_summary)
+    write_json(DATA_DIR / "hotspots.json", hotspot_rows[:600])
+    write_json(DATA_DIR / "hex_decade_bins.json", decade_bin_rows)
 
     print(f"Clean rows: {len(rows):,}")
     print(f"Valid coordinate rows: {len(valid_geo_rows):,}")
     print(f"Actual year range: {min_year}-{max_year}")
     print(f"Wrote {CLEAN_PATH}")
-    print(f"Wrote website data to {SITE_DATA_DIR}")
+    print(f"Wrote website data to {DATA_DIR}")
 
 
 if __name__ == "__main__":
