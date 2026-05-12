@@ -192,7 +192,7 @@ function renderShapeGroupStack(shapes) {
   })), baseLayout("#shape-group-stack", {
     barmode: "stack",
     height: 120,
-    margin: { t: 6, r: 8, b: 6, l: 8 },
+    margin: { t: 6, r: 18, b: 6, l: 18 },
     showlegend: false,
     paper_bgcolor: "rgba(0,0,0,0)",
     plot_bgcolor: "rgba(0,0,0,0)",
@@ -328,13 +328,14 @@ function renderAnnualLine(data) {
         layer: "below"
       }],
       annotations: [{
-        x: 1996,
+        x: 2004.6,
         y: 0.96,
         xref: "x",
         yref: "paper",
         text: mode === "log" ? "online reporting era (log scale)" : "online reporting era",
         showarrow: false,
-        xanchor: "left",
+        xanchor: "right",
+        align: "right",
         font: { color: "#7a5d2a", size: 12 }
       }]
     }));
@@ -428,7 +429,7 @@ function renderStateSection(states) {
       text: states.map((d) => d.state_name),
       customdata: states.map((d) => [d.reports, d.reports_per_million]),
       colorscale: mode === "reports" ? "Blues" : "OrRd",
-      reversescale: true,
+      reversescale: mode === "reports",
       marker: { line: { color: "#ffffff", width: 0.7 } },
       colorbar: { title: mode === "reports" ? "reports" : "per million", tickformat: "~s" },
       hovertemplate: mode === "reports"
